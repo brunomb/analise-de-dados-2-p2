@@ -64,8 +64,8 @@ webplot = function(data, data.row = NULL, y.cols = NULL, main = NULL, add = F,
 }
 ```
 ```{r include= FALSE}
-familiaridade_pais <- read.csv("~/Documentos/ufcg/analise-de-dados-2/analise-de-dados-2-p2/familiaridade_pais.csv")
-popularidade_pais <- read.csv("~/Documentos/ufcg/analise-de-dados-2/analise-de-dados-2-p2/popularidade_pais.csv")
+familiaridade_pais <- read.csv("~/ufcg/analise-de-dados-2/analise-de-dados-2-p2/familiaridade_pais1.csv")
+popularidade_pais <- read.csv("~/ufcg/analise-de-dados-2/analise-de-dados-2-p2/popularidade_pais1.csv")
 ```
 ```{r fig.width=9, fig.height=9, echo=FALSE}
 webplot(familiaridade_pais,1, main = "Familiaridade", scale = T)
@@ -86,7 +86,7 @@ Com este gráfico fica fácil perceber quais países tem os artistas mais famili
 ## Segment Diagrams:
 require(grDevices)
 palette(rainbow(12, s = 0.6, v = 0.75))
-stars(familiaridade_pais[, 2:6], key.loc = c(5, 2),len = 1, main = "Familiaridade", draw.segments = TRUE, full =FALSE, labels = c("Canada","France","Jamaica","United Kingdom","United States"), scale = TRUE)
+stars(familiaridade_pais[, 2:6], key.loc = c(5.3, 2.3), len = 1, main = "Familiaridade", draw.segments = TRUE, full = FALSE, labels = c("Canada","France","Jamaica","United Kingdom","United States",""), scale = TRUE)
 ```
 
 ```{r fig.width=9, fig.height=9, echo=FALSE}
@@ -108,7 +108,7 @@ Com este gráfico fica fácil perceber quais países tem os artistas mais popula
 ## Segment Diagrams:
 require(grDevices)
 palette(rainbow(12, s = 0.6, v = 0.75))
-stars(popularidade_pais[, 2:6], key.loc = c(5, 2), main = "Popularidade", draw.segments = TRUE, full = FALSE, labels =c("Canada","France","Jamaica","United Kingdom","United States"), scale = TRUE)
+stars(popularidade_pais[, 2:6], key.loc = c(5.3, 2.3), main = "Popularidade", draw.segments = TRUE, full = FALSE, labels =c("Canada","France","Jamaica","United Kingdom","United States",""), scale = TRUE)
 ```
 
 Depois de observar os gráficos percebemos que o país que tem os artistas mais populares e familiares é o Reino Unido.

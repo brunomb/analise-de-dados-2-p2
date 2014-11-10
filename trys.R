@@ -1,13 +1,13 @@
-subset_unique_artists <- read.csv("~/Documentos/ufcg/analise-de-dados-2/analise-de-dados-2-p2/subset_unique_artists.csv")
+subset_unique_artists <- read.csv("~/ufcg/analise-de-dados-2/analise-de-dados-2-p2/subset_unique_artists.csv")
 View(subset_unique_artists)
 
-id.artista.local <- read.csv("~/Documentos/ufcg/analise-de-dados-2/analise-de-dados-2-p2/id.artista.local.csv")
+id.artista.local <- read.csv("~/ufcg/analise-de-dados-2/analise-de-dados-2-p2/id.artista.local.csv")
 View(id.artista.local)
 
-songs <- read.csv("~/Documentos/ufcg/analise-de-dados-2/analise-de-dados-2-p2/songs.csv")
+songs <- read.csv("~/ufcg/analise-de-dados-2/analise-de-dados-2-p2/songs.csv")
 
 
-artists.terms <- read.csv("~/Documentos/ufcg/analise-de-dados-2/analise-de-dados-2-p2/artist_term.csv")
+artists.terms <- read.csv("~/ufcg/analise-de-dados-2/analise-de-dados-2-p2/artist_term.csv")
 summary(artists.terms) 
 
 summary(songs)
@@ -16,9 +16,14 @@ artistas.id.mid <- merge(id.artista.local,subset_unique_artists,by="artist_id")
 artistas.id.mid$track_id <- NULL
 artistas.id.mid$artist_name.y <- NULL
 
+View(artistas.id.mid)
+
 artistas.pop <- aggregate(. ~ artist_id, data=songs, FUN=mean)
 
 artistas.id.mid.hot <- merge(artistas.pop,artistas.id.mid,by="artist_id")
+
+View(artistas.id.mid.hot)
+summary(artistas.id.mid.hot)
 
 artistas.id.mid.hot$title <- NULL
 artistas.id.mid.hot$song_id <- NULL
@@ -29,22 +34,32 @@ artistas.id.mid.hot$duration <- NULL
 artistas.id.mid.hot$year <- NULL
 artistas.id.mid.hot$track_id <- NULL
 
+View(artistas.id.mid.hot)
+summary(artistas.id.mid.hot)
+
 artistas.id.mid.hot.term <- merge(artistas.id.mid.hot,artists.terms,by="artist_id")
 artistas.interessados <- subset(artistas.id.mid.hot.term, artistas.id.mid.hot.term$term == "rock" | artistas.id.mid.hot.term$term == "jazz" | artistas.id.mid.hot.term$term == "pop" | artistas.id.mid.hot.term$term == "electronic" | artistas.id.mid.hot.term$term == "alternative rock")
+
+View(artistas.interessados)
+summary(artistas.interessados)
 
 ## dados rock ###
 artistas.rock <- subset(artistas.id.mid.hot.term, artistas.id.mid.hot.term$term == "rock")
 artistas.rock.pais <- aggregate(. ~ artist_country, data=artistas.rock, FUN=mean)
+View(artistas.rock.pais)
 artistas.rock.pais$artist_id <- NULL
 artistas.rock.pais$artist_mbid.x <- NULL
 artistas.rock.pais$artist_name.x <- NULL
 artistas.rock.pais$artist_mbid.y <- NULL
 artistas.rock.pais$term <- NULL
+View(artistas.rock.pais)
 artistas.rock.pais <- subset(artistas.rock.pais, artistas.rock.pais$artist_country == "United States" | artistas.rock.pais$artist_country == "United Kingdom" | artistas.rock.pais$artist_country == "Canada" | artistas.rock.pais$artist_country == "France" | artistas.rock.pais$artist_country == "Jamaica")
+View(artistas.rock.pais)
 
 ## dados jazz ###
 artistas.jazz <- subset(artistas.id.mid.hot.term, artistas.id.mid.hot.term$term == "jazz")
 artistas.jazz.pais <- aggregate(. ~ artist_country, data=artistas.jazz, FUN=mean)
+View(artistas.jazz.pais)
 artistas.jazz.pais$artist_id <- NULL
 artistas.jazz.pais$artist_mbid.x <- NULL
 artistas.jazz.pais$artist_name.x <- NULL
@@ -55,6 +70,7 @@ artistas.jazz.pais <- subset(artistas.jazz.pais, artistas.jazz.pais$artist_count
 ## dados pop ###
 artistas.pop <- subset(artistas.id.mid.hot.term, artistas.id.mid.hot.term$term == "pop")
 artistas.pop.pais <- aggregate(. ~ artist_country, data=artistas.pop, FUN=mean)
+View(artistas.pop.pais)
 artistas.pop.pais$artist_id <- NULL
 artistas.pop.pais$artist_mbid.x <- NULL
 artistas.pop.pais$artist_name.x <- NULL
@@ -65,6 +81,7 @@ artistas.pop.pais <- subset(artistas.pop.pais, artistas.pop.pais$artist_country 
 ## dados eletronic ###
 artistas.electronic <- subset(artistas.id.mid.hot.term, artistas.id.mid.hot.term$term == "electronic")
 artistas.electronic.pais <- aggregate(. ~ artist_country, data=artistas.electronic, FUN=mean)
+View(artistas.electronic.pais)
 artistas.electronic.pais$artist_id <- NULL
 artistas.electronic.pais$artist_mbid.x <- NULL
 artistas.electronic.pais$artist_name.x <- NULL
@@ -75,15 +92,18 @@ artistas.electronic.pais <- subset(artistas.electronic.pais, artistas.electronic
 ## dados alternative rock ###
 artistas.alternative.rock <- subset(artistas.id.mid.hot.term, artistas.id.mid.hot.term$term == "alternative rock")
 artistas.alternative.rock.pais <- aggregate(. ~ artist_country, data=artistas.alternative.rock, FUN=mean)
+View(artistas.alternative.rock.pais)
 artistas.alternative.rock.pais$artist_id <- NULL
 artistas.alternative.rock.pais$artist_mbid.x <- NULL
 artistas.alternative.rock.pais$artist_name.x <- NULL
 artistas.alternative.rock.pais$artist_mbid.y <- NULL
 artistas.alternative.rock.pais$term <- NULL
 artistas.alternative.rock.pais <- subset(artistas.alternative.rock.pais, artistas.alternative.rock.pais$artist_country == "United States" | artistas.alternative.rock.pais$artist_country == "United Kingdom" | artistas.alternative.rock.pais$artist_country == "Canada" | artistas.alternative.rock.pais$artist_country == "France" | artistas.alternative.rock.pais$artist_country == "Jamaica")
+View(artistas.alternative.rock.pais)
 
+## artistas.id.mid.hot.term2 <- aggregate(. ~ artist_id, data=artistas.id.mid.hot.term, FUN=mode)
 
-artistas.id.mid.hot.term2 <- aggregate(. ~ artist_id, data=artistas.id.mid.hot.term, FUN=mode)
+## View(artistas.id.mid.hot.term2)
 
 library(psych)
 
