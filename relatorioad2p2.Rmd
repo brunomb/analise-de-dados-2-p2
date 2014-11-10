@@ -1,0 +1,115 @@
+Problema 02
+========================================================
+**Implemente um relatório usando RMarkdown + ggplot2 (+ quaisquer bibliotecas que você queira) que responda a 2 das perguntas que você criou na parte 2 implementando as visualizações que você criou na parte 3 deste problema. O relatório pode ser sucinto, mas deve, além de mencionar as perguntas e apresentar as visualizações, apresentar a sua resposta para a pergunta e a sua interpretação desta resposta. (Isso é, o que ela significa).**
+**A.Trace um esboco do caminho que ele percorreu analisando os dados para responder essas perguntas.**
+
+Quais países tem os artistas mais populares/familiares por estilo?
+--------------------------------------------------------
+Para gerar essa visualização separei os artistas de acordo com seu país e calculei a media de popularidade e familiaridade de cada país.
+```{r include= FALSE}
+webplot = function(data, data.row = NULL, y.cols = NULL, main = NULL, add = F, 
+                   col = "red", lty = 1, scale = T) {
+  if (!is.matrix(data) & !is.data.frame(data)) 
+    stop("Requires matrix or data.frame")
+  if (is.null(y.cols)) 
+    y.cols = colnames(data)[sapply(data, is.numeric)]
+  if (sum(!sapply(data[, y.cols], is.numeric)) > 0) {
+    out = paste0("\"", colnames(data)[!sapply(data, is.numeric)], "\"", 
+                 collapse = ", ")
+    stop(paste0("All y.cols must be numeric\n", out, " are not numeric"))
+  }
+  if (is.null(data.row)) 
+    data.row = 1
+  if (is.character(data.row)) 
+    if (data.row %in% rownames(data)) {
+      data.row = which(rownames(data) == data.row)
+    } else {
+      stop("Invalid value for data.row:\nMust be a valid rownames(data) or row-index value")
+    }
+  if (is.null(main)) 
+    main = rownames(data)[data.row]
+  if (scale == T) {
+    data = scale(data[, y.cols])
+    data = apply(data, 2, function(x) x/max(abs(x)))
+  }
+  data = as.data.frame(data)
+  n.y = length(y.cols)
+  min.rad = 360/n.y
+  polar.vals = (90 + seq(0, 360, length.out = n.y + 1)) * pi/180
+  
+  # 
+  if (add == F) {
+    plot(0, xlim = c(-2.2, 2.2), ylim = c(-2.2, 2.2), type = "n", axes = F, 
+         xlab = "", ylab = "")
+    title(main)
+    lapply(polar.vals, function(x) lines(c(0, 2 * cos(x)), c(0, 2 * sin(x))))
+    lapply(1:n.y, function(x) text(2.15 * cos(polar.vals[x]), 2.15 * sin(polar.vals[x]), 
+                                   y.cols[x], cex = 0.8))
+    
+    lapply(seq(0.5, 2, 0.5), function(x) lines(x * cos(seq(0, 2 * pi, length.out = 100)), 
+                                               x * sin(seq(0, 2 * pi, length.out = 100)), lwd = 0.5, lty = 2, col = "gray60"))
+    lines(cos(seq(0, 2 * pi, length.out = 100)), sin(seq(0, 2 * pi, length.out = 100)), 
+          lwd = 1.2, col = "gray50")
+  }
+  
+  
+  r = 1 + data[data.row, y.cols]
+  xs = r * cos(polar.vals)
+  ys = r * sin(polar.vals)
+  xs = c(xs, xs[1])
+  ys = c(ys, ys[1])
+  
+  lines(xs, ys, col = col, lwd = 2, lty = lty)
+  
+}
+```
+```{r include= FALSE}
+familiaridade_pais <- read.csv("~/Documentos/ufcg/analise-de-dados-2/analise-de-dados-2-p2/familiaridade_pais.csv")
+popularidade_pais <- read.csv("~/Documentos/ufcg/analise-de-dados-2/analise-de-dados-2-p2/popularidade_pais.csv")
+```
+```{r fig.width=9, fig.height=9, echo=FALSE}
+webplot(familiaridade_pais,1, main = "Familiaridade", scale = T)
+par(new = T)
+webplot(familiaridade_pais,2, col = "blue", main = "", scale = T)
+par(new = T)
+webplot(familiaridade_pais,3, col = "green", main = "", scale = T)
+par(new = T)
+webplot(familiaridade_pais,4, col = "yellow", main = "", scale = T)
+par(new = T)
+webplot(familiaridade_pais,5, col = "orange", main = "", scale = T)
+legend("topright", lwd = 5, col = c("red", "blue", "green","yellow","orange"), c("Canada","France", "Jamaica", "United Kingdom", "United States"), bty = "n")
+```
+
+Com este gráfico fica fácil perceber quais países tem os artistas mais familiares mas fica difícil comparar os valores de um só pais então gerei a seguinte visualização:
+
+```{r fig.width=9, fig.height=9, echo=FALSE}
+## Segment Diagrams:
+require(grDevices)
+palette(rainbow(12, s = 0.6, v = 0.75))
+stars(familiaridade_pais[, 2:6], key.loc = c(5, 2),len = 1, main = "Familiaridade", draw.segments = TRUE, full =FALSE, labels = c("Canada","France","Jamaica","United Kingdom","United States"), scale = TRUE)
+```
+
+```{r fig.width=9, fig.height=9, echo=FALSE}
+webplot(popularidade_pais,1, main = "Popularidade")
+par(new = T)
+webplot(popularidade_pais,2, col = "blue", main = "")
+par(new = T)
+webplot(popularidade_pais,3, col = "green", main = "")
+par(new = T)
+webplot(popularidade_pais,4, col = "yellow", main = "")
+par(new = T)
+webplot(popularidade_pais,5, col = "orange", main = "")
+legend( "topright", lwd = 5, col = c("red", "blue", "green","yellow","orange"), c("Canada","France", "Jamaica", "United Kingdom", "United States"), bty = "n")
+```
+
+Com este gráfico fica fácil perceber quais países tem os artistas mais populares mas fica difícil comparar os valores de um só pais então gerei a seguinte visualização:
+
+```{r fig.width=9, fig.height=9, echo=FALSE}
+## Segment Diagrams:
+require(grDevices)
+palette(rainbow(12, s = 0.6, v = 0.75))
+stars(popularidade_pais[, 2:6], key.loc = c(5, 2), main = "Popularidade", draw.segments = TRUE, full = FALSE, labels =c("Canada","France","Jamaica","United Kingdom","United States"), scale = TRUE)
+```
+
+Depois de observar os gráficos percebemos que o país que tem os artistas mais populares e familiares é o Reino Unido.
+

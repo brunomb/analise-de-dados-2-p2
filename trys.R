@@ -6,6 +6,12 @@ View(id.artista.local)
 
 songs <- read.csv("~/Documentos/ufcg/analise-de-dados-2/analise-de-dados-2-p2/songs.csv")
 
+
+artists.terms <- read.csv("~/Documentos/ufcg/analise-de-dados-2/analise-de-dados-2-p2/artist_term.csv")
+summary(artists.terms) 
+
+summary(songs)
+
 artistas.id.mid <- merge(id.artista.local,subset_unique_artists,by="artist_id")
 artistas.id.mid$track_id <- NULL
 artistas.id.mid$artist_name.y <- NULL
@@ -17,13 +23,65 @@ artistas.id.mid.hot <- merge(artistas.pop,artistas.id.mid,by="artist_id")
 artistas.id.mid.hot$title <- NULL
 artistas.id.mid.hot$song_id <- NULL
 artistas.id.mid.hot$release <- NULL
-artistas.id.mid.hot$artist_mbid.x <- NULLli
+artistas.id.mid.hot$artist_mbid.x <- NULL
 artistas.id.mid.hot$artist_name <- NULL
 artistas.id.mid.hot$duration <- NULL
 artistas.id.mid.hot$year <- NULL
 artistas.id.mid.hot$track_id <- NULL
 
-artistas.id.mid.hot.term <- merge(artistas.id.mid.hot,artist_term,by="artist_id")
+artistas.id.mid.hot.term <- merge(artistas.id.mid.hot,artists.terms,by="artist_id")
+artistas.interessados <- subset(artistas.id.mid.hot.term, artistas.id.mid.hot.term$term == "rock" | artistas.id.mid.hot.term$term == "jazz" | artistas.id.mid.hot.term$term == "pop" | artistas.id.mid.hot.term$term == "electronic" | artistas.id.mid.hot.term$term == "alternative rock")
+
+## dados rock ###
+artistas.rock <- subset(artistas.id.mid.hot.term, artistas.id.mid.hot.term$term == "rock")
+artistas.rock.pais <- aggregate(. ~ artist_country, data=artistas.rock, FUN=mean)
+artistas.rock.pais$artist_id <- NULL
+artistas.rock.pais$artist_mbid.x <- NULL
+artistas.rock.pais$artist_name.x <- NULL
+artistas.rock.pais$artist_mbid.y <- NULL
+artistas.rock.pais$term <- NULL
+artistas.rock.pais <- subset(artistas.rock.pais, artistas.rock.pais$artist_country == "United States" | artistas.rock.pais$artist_country == "United Kingdom" | artistas.rock.pais$artist_country == "Canada" | artistas.rock.pais$artist_country == "France" | artistas.rock.pais$artist_country == "Jamaica")
+
+## dados jazz ###
+artistas.jazz <- subset(artistas.id.mid.hot.term, artistas.id.mid.hot.term$term == "jazz")
+artistas.jazz.pais <- aggregate(. ~ artist_country, data=artistas.jazz, FUN=mean)
+artistas.jazz.pais$artist_id <- NULL
+artistas.jazz.pais$artist_mbid.x <- NULL
+artistas.jazz.pais$artist_name.x <- NULL
+artistas.jazz.pais$artist_mbid.y <- NULL
+artistas.jazz.pais$term <- NULL
+artistas.jazz.pais <- subset(artistas.jazz.pais, artistas.jazz.pais$artist_country == "United States" | artistas.jazz.pais$artist_country == "United Kingdom" | artistas.jazz.pais$artist_country == "Canada" | artistas.jazz.pais$artist_country == "France" | artistas.jazz.pais$artist_country == "Jamaica")
+
+## dados pop ###
+artistas.pop <- subset(artistas.id.mid.hot.term, artistas.id.mid.hot.term$term == "pop")
+artistas.pop.pais <- aggregate(. ~ artist_country, data=artistas.pop, FUN=mean)
+artistas.pop.pais$artist_id <- NULL
+artistas.pop.pais$artist_mbid.x <- NULL
+artistas.pop.pais$artist_name.x <- NULL
+artistas.pop.pais$artist_mbid.y <- NULL
+artistas.pop.pais$term <- NULL
+artistas.pop.pais <- subset(artistas.pop.pais, artistas.pop.pais$artist_country == "United States" | artistas.pop.pais$artist_country == "United Kingdom" | artistas.pop.pais$artist_country == "Canada" | artistas.pop.pais$artist_country == "France" | artistas.pop.pais$artist_country == "Jamaica")
+
+## dados eletronic ###
+artistas.electronic <- subset(artistas.id.mid.hot.term, artistas.id.mid.hot.term$term == "electronic")
+artistas.electronic.pais <- aggregate(. ~ artist_country, data=artistas.electronic, FUN=mean)
+artistas.electronic.pais$artist_id <- NULL
+artistas.electronic.pais$artist_mbid.x <- NULL
+artistas.electronic.pais$artist_name.x <- NULL
+artistas.electronic.pais$artist_mbid.y <- NULL
+artistas.electronic.pais$term <- NULL
+artistas.electronic.pais <- subset(artistas.electronic.pais, artistas.electronic.pais$artist_country == "United States" | artistas.electronic.pais$artist_country == "United Kingdom" | artistas.electronic.pais$artist_country == "Canada" | artistas.electronic.pais$artist_country == "France" | artistas.electronic.pais$artist_country == "Jamaica")
+
+## dados alternative rock ###
+artistas.alternative.rock <- subset(artistas.id.mid.hot.term, artistas.id.mid.hot.term$term == "alternative rock")
+artistas.alternative.rock.pais <- aggregate(. ~ artist_country, data=artistas.alternative.rock, FUN=mean)
+artistas.alternative.rock.pais$artist_id <- NULL
+artistas.alternative.rock.pais$artist_mbid.x <- NULL
+artistas.alternative.rock.pais$artist_name.x <- NULL
+artistas.alternative.rock.pais$artist_mbid.y <- NULL
+artistas.alternative.rock.pais$term <- NULL
+artistas.alternative.rock.pais <- subset(artistas.alternative.rock.pais, artistas.alternative.rock.pais$artist_country == "United States" | artistas.alternative.rock.pais$artist_country == "United Kingdom" | artistas.alternative.rock.pais$artist_country == "Canada" | artistas.alternative.rock.pais$artist_country == "France" | artistas.alternative.rock.pais$artist_country == "Jamaica")
+
 
 artistas.id.mid.hot.term2 <- aggregate(. ~ artist_id, data=artistas.id.mid.hot.term, FUN=mode)
 
@@ -44,8 +102,8 @@ par(op)
 
 
 require(grDevices)
-stars(mtcars[, 1:7], key.loc = c(14, 2),
-      main = "Motor Trend Cars : stars(*, full = F)", full = FALSE)
+stars(mtcars[, 1:7], key.loc = c(14, 2), main = "Motor Trend Cars : stars(*, full = F)", full = FALSE)
+
 stars(mtcars[, 1:7], key.loc = c(14, 1.5),
       main = "Motor Trend Cars : full stars()", flip.labels = FALSE)
 
@@ -149,8 +207,67 @@ webplot = function(data, data.row = NULL, y.cols = NULL, main = NULL, add = F,
   lines(xs, ys, col = col, lwd = 2, lty = lty)
   
 }
-webplot(artistas.id.mid.hot.term,data.row= 300, lty = 1)
 
+familiaridade_pais <- read.csv("~/Documentos/ufcg/analise-de-dados-2/analise-de-dados-2-p2/familiaridade_pais.csv")
+popularidade_pais <- read.csv("~/Documentos/ufcg/analise-de-dados-2/analise-de-dados-2-p2/popularidade_pais.csv")
+
+webplot(familiaridade_pais,1, main = "Familiaridade", scale = T)
+par(new = T)
+webplot(familiaridade_pais,2, col = "blue", main = "", scale = T)
+par(new = T)
+webplot(familiaridade_pais,3, col = "green", main = "", scale = T)
+par(new = T)
+webplot(familiaridade_pais,4, col = "yellow", main = "", scale = T)
+par(new = T)
+webplot(familiaridade_pais,5, col = "orange", main = "", scale = T)
+legend("bottomright", lwd = 5, col = c("red", "blue", "green","yellow","orange"), c("Canada","France", "Jamaica", "United Kingdom", "United States"), bty = "n")
+
+webplot(popularidade_pais,1, main = "Popularidade")
+par(new = T)
+webplot(popularidade_pais,2, col = "blue", main = "")
+par(new = T)
+webplot(popularidade_pais,3, col = "green", main = "")
+par(new = T)
+webplot(popularidade_pais,4, col = "yellow", main = "")
+par(new = T)
+webplot(popularidade_pais,5, col = "orange", main = "")
+legend("bottomright", lwd = 5, col = c("red", "blue", "green","yellow","orange"), c("Canada","France", "Jamaica", "United Kingdom", "United States"), bty = "n")
+
+## 'Spider' or 'Radar' plot:
+stars(mtcars[, 1:7], locations = c(0, 0), radius = FALSE, key.loc = c(0, 0), main = "Motor Trend Cars", lty = 2)
+
+stars(familiaridade_pais, locations = c(0, 0), col.stars = 1:10 , main = "Familiaridade", key.loc = c(0, 0))
+
+## 'Spider':
+stars(USJudgeRatings, locations = c(0, 0), scale = FALSE, radius  =  FALSE, col.stars = 1:10, key.loc = c(0, 0), main = "US Judges rated")
+
+## Same as above, but with colored lines instead of filled polygons.
+stars(USJudgeRatings, locations = c(0, 0), scale = FALSE, radius  =  FALSE, col.lines = 1:10, key.loc = c(0, 0), main = "US Judges rated")
+
+
+View(Thurstone)
+spider(y=1,x=2:9,data=Thurstone,connect=FALSE) #a radar plot
+spider(y=1,x=2:9,data=Thurstone) #same plot as a spider plot
+spider(y=26:28,x=1:25,data=cor(bfi,use="pairwise"),fill=TRUE,scale=2) 
+
+stars(aa[, 1:7], key.loc = c(14, 2), main = "Motor Trend Cars : stars(*, full = F)", full = FALSE)
+
+## Segment Diagrams:
+require(grDevices)
+palette(rainbow(12, s = 0.6, v = 0.75))
+stars(familiaridade_pais[, 2:6], key.loc = c(5, 2),len = 1, main = "Familiaridade", draw.segments = TRUE, full =FALSE, labels = c("Canada","France","Jamaica","United Kingdom","United States"), scale = TRUE)
+
+
+stars(popularidade_pais[, 2:6], key.loc = c(5, 2), main = "Popularidade", draw.segments = TRUE, full = FALSE, labels = NULL, scale = TRUE)
+
+View(mtcars)
+
+require(grDevices)
+stars(mtcars[, 1:7], key.loc = c(14, 2), main = "Motor Trend Cars : stars(*, full = F)", full = FALSE)
+stars(mtcars[, 1:7], key.loc = c(14, 1.5),
+      main = "Motor Trend Cars : full stars()", flip.labels = FALSE)
+
+library("psych")
 
 summary(artistas.id.mid.hot.term)
 write.csv(artistas.id.mid.hot.term, file = "~/Documentos/ufcg/analise-de-dados-2/analise-de-dados-2-p2/artistas.id.mid.hot.term.csv")
@@ -173,8 +290,16 @@ artistas.id.mid.hot.term2 <- subset(artistas.id.mid.hot.term, artistas.id.mid.ho
 
 "rock" | "pop" | "electronic" | "jazz" | "united states" | "alternative rock"
 
+library(fmsb)
+radarchart(familiaridade_pais, axistype=2, maxmin = FALSE)
+aaa <- familiaridade_pais
+aaa$row.names <- NULL
 
-
-
+install.packages("ggplot2")
+library(ggplot2)
+p <- ggplot(mtcars, aes( x = factor(gear)))
+p + 
+  geom_bar(width = 1, colour = "black") + 
+  coord_polar(theta = "x")
 
 
