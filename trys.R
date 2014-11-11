@@ -5,7 +5,7 @@ id.artista.local <- read.csv("~/ufcg/analise-de-dados-2/analise-de-dados-2-p2/id
 View(id.artista.local)
 
 songs <- read.csv("~/ufcg/analise-de-dados-2/analise-de-dados-2-p2/songs.csv")
-
+View(songs)
 
 artists.terms <- read.csv("~/ufcg/analise-de-dados-2/analise-de-dados-2-p2/artist_term.csv")
 summary(artists.terms) 
@@ -322,4 +322,18 @@ p +
   geom_bar(width = 1, colour = "black") + 
   coord_polar(theta = "x")
 
+library(ggplot2)
 
+# A bar graph
+ggplot(data=df1, aes(x=time, y=total_bill, fill=sex)) + 
+  geom_bar(colour="black", stat="identity",
+           position=position_dodge(),
+           size=.3) +                        # Thinner lines
+  scale_fill_hue(name="Sex of payer") +      # Set legend title
+  xlab("Time of day") + ylab("Total bill") + # Set axis labels
+  ggtitle("Average bill for 2 people") +  # Set title
+  theme_bw()
+
+df1 <- data.frame(sex       = factor(c("Female","Female","Male","Male","Male","Female")),
+                  time       = factor(c("Lunch","Dinner","Lunch","Dinner","Tarde", "Tarde"), levels=c("Lunch","Dinner")),
+                  total_bill = c(13.53, 16.81, 16.24, 17.42,15.57,18.2))
